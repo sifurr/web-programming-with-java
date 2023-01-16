@@ -1,7 +1,9 @@
 package com.bazlur.eshoppers.service;
 
 import com.bazlur.eshoppers.domain.User;
+import com.bazlur.eshoppers.dto.LoginDTO;
 import com.bazlur.eshoppers.dto.UserDTO;
+import com.bazlur.eshoppers.exceptions.UserNotFoundException;
 import com.bazlur.eshoppers.repository.UserRepository;
 
 import java.nio.charset.StandardCharsets;
@@ -34,6 +36,24 @@ public class UserServiceImpl implements UserService
     public boolean isNotUniqueUsername(UserDTO user)
     {
         return userRepository.findByUsername(user.getUsername()).isPresent();
+    }
+
+    @Override
+    public User verifyUser(LoginDTO loginDTO) throws UserNotFoundException
+    {
+        var user = userRepository.findByUsername(loginDTO.getUsername())
+                .orElseThrow(() -> new UserNotFoundException(
+                        "User not found by " + loginDTO.getUsername()));
+        var encrypted = encryptedPassword(loginDTO.getPassword());
+        if(user.getPassword().equals(encrypted))
+        {
+            return user;
+        }
+        else
+        {
+            throw new UserNotFoundException("Incorrect username password");
+        }
+
     }
 
     private String encryptedPassword(String password)
