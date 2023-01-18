@@ -6,6 +6,7 @@ import com.bazlur.eshoppers.exceptions.UserNotFoundException;
 import com.bazlur.eshoppers.repository.UserRepositoryImpl;
 import com.bazlur.eshoppers.service.UserService;
 import com.bazlur.eshoppers.service.UserServiceImpl;
+import com.bazlur.eshoppers.util.SecurityContext;
 import com.bazlur.eshoppers.util.ValidationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,12 @@ public class LoginServlet extends HttpServlet
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
     {
         LOGGER.info("Serving login page");
+        String logout = req.getParameter("logout");
+        if(logout != null && Boolean.parseBoolean(logout))
+        {
+            req.setAttribute("message", "You have been successfully logged out");
+        }
+
         req.getRequestDispatcher("/WEB-INF/login.jsp").forward(req, resp);
     }
 
@@ -63,6 +70,9 @@ public class LoginServlet extends HttpServlet
     private void login(LoginDTO loginDTO, HttpServletRequest req) throws UserNotFoundException
     {
         User user = userService.verifyUser(loginDTO);
+
+        SecurityContext.login(req, user);
+        /*
         // get the old session and invalidate
         HttpSession oldSession = req.getSession(false);
         if(oldSession != null)
@@ -73,5 +83,6 @@ public class LoginServlet extends HttpServlet
         // put user in the sessions
         HttpSession session = req.getSession(true);
         session.setAttribute("user", user);
+         */
     }
 }
