@@ -33,7 +33,7 @@ public class CartRepositoryImpl implements CartRepository
                             carts.add(cart);
                             return carts;
                         });
-        CARTS.computeIfPresent(cart.getUser(), user -> {
+        CARTS.computeIfAbsent(cart.getUser(), user -> {
             var carts = new LinkedHashSet<Cart>();
             carts.add(cart);
             return carts;
@@ -52,4 +52,5 @@ public class CartRepositoryImpl implements CartRepository
         });
         return cart;
     }
+
 }

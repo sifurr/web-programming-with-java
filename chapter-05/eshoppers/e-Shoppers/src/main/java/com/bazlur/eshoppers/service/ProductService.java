@@ -6,5 +6,7 @@ import java.util.List;
 
 public interface ProductService
 {
-    List<ProductDTO> findAllProductsSortedByName();
+//    List<ProductDTO> findAllProductsSortedByName();
+
+    List<ProductDTO> findAllProductSortedByName();
 }
