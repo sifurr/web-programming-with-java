@@ -7,4 +7,6 @@ public interface CartItemRepository
     CartItem update(CartItem cartItem);
 
     CartItem save(CartItem cartItem);
+
+    void remove(CartItem cartItem);
 }

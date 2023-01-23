@@ -1,6 +1,7 @@
 package com.bazlur.eshoppers.repository;
 
 import com.bazlur.eshoppers.domain.Cart;
+import com.bazlur.eshoppers.domain.Order;
 import com.bazlur.eshoppers.domain.User;
 
 import java.util.*;
@@ -8,20 +9,64 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class CartRepositoryImpl implements CartRepository
 {
+    private OrderRepository orderRepository = new OrderRepositoryImpl();
 
     private static final Map<User, Set<Cart>> CARTS
             = new ConcurrentHashMap<>();
-
     @Override
     public Optional<Cart> findByUser(User currentUser)
     {
         Set<Cart> carts = CARTS.get(currentUser);
+        var userCart = getCart(currentUser);
         if(carts != null && !carts.isEmpty())
         {
             Cart cart = (Cart) carts.toArray()[carts.size() - 1];
             return Optional.of(cart);
         }
 
+        return Optional.empty();
+    }
+
+
+
+//    private static final Map<User, LinkedHashSet<Cart>> CARTS
+//            = new ConcurrentHashMap<>();
+//    @Override
+//    public Optional<Cart> findByUser(User currentUser)
+//    {
+//        var usersCart = getCart(currentUser);
+//        if(usersCart.isPresent())
+//        {
+//            var cart = usersCart.get();
+//            var orders
+//                    = orderRepository.findOrderByUser(currentUser);
+//            if(isOrderAlreadyPlacedWith(orders, cart))
+//            {
+//                return Optional.empty();
+//            }
+//            else
+//            {
+//                return Optional.of(cart);
+//            }
+//        }
+//
+//        return Optional.empty();
+//    }
+//
+//    private boolean isOrderAlreadyPlacedWith(Set<Order> orderByUser, Cart cart)
+//    {
+//        return orderByUser.stream()
+//                .noneMatch(order -> order.getCart().equals(cart));
+//    }
+
+    private Optional<Cart> getCart(User currentUser)
+    {
+        var carts = CARTS.get(currentUser);
+        if(carts != null && !carts.isEmpty())
+        {
+            Cart cart = (Cart) carts.toArray()[carts.size() - 1];
+            return Optional.of(cart);
+        }
         return Optional.empty();
     }
 
