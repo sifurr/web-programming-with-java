@@ -1,5 +1,6 @@
 package com.bazlur.eshoppers.web;
 
+import com.bazlur.eshoppers.service.Action;
 import com.bazlur.eshoppers.domain.Cart;
 import com.bazlur.eshoppers.domain.User;
 import com.bazlur.eshoppers.repository.CartItemRepositoryImpl;
@@ -19,8 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.io.IOException;
 
-import static com.bazlur.eshoppers.web.Action.ADD;
-import static com.bazlur.eshoppers.web.Action.REMOVE;
 
 @WebServlet("/add-to-cart")
 public class CartServlet extends HttpServlet {
@@ -57,16 +56,17 @@ public class CartServlet extends HttpServlet {
 
     private void processCart(String productId, String action, Cart cart)
     {
-        switch (Desktop.Action.valueOf(action.toUpperCase()))
-        {
+        switch (Action.valueOf(action.toUpperCase())) {
             case ADD:
                 LOGGER.info(
-                        "Received request to add product with id: {} to cart", productId);
+                        "Received request to add product with id: {} to cart",
+                        productId);
                 cartService.addProductToCart(productId, cart);
                 break;
             case REMOVE:
                 LOGGER.info(
-                        "Received request to remove product with id: {} to cart", productId);
+                        "Received request to remove product with id: {} to cart",
+                        productId);
                 cartService.removeProductToCart(productId, cart);
                 break;
         }
